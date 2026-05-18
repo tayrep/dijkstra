@@ -1,4 +1,4 @@
-﻿// По системе двусторонних дорог определить, есть ли в ней город, из которого можно добраться в любой другой, проехав меньше 100 км. Разрешается построить дополнительно три дороги.
+// По системе двусторонних дорог определить, есть ли в ней город, из которого можно добраться в любой другой, проехав меньше 100 км. Разрешается построить дополнительно три дороги.
 
 #include <iostream>
 #include <vector>
@@ -8,35 +8,29 @@ using namespace std;
 
 vector<long long> solve(int start,
     vector<vector<pair<int, int>>>& g) {
-
     int n = g.size();
-
     vector<long long> dist(n, 9999);
-
-    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> q;
-
+    vector<bool> used(n, false);
     dist[start] = 0;
-    q.push({ 0, start });
 
-    while (!q.empty()) {
+    for (int i = 0; i < n; i++) {
+        int v = -1;
 
-        long long d = q.top().first;
-        int v = q.top().second;
-        q.pop();
+        for (int j = 0; j < n; j++)
+            if (!used[j] && (v == -1 || dist[j] < dist[v]))
+                v = j;
 
-        if (d != dist[v])
-            continue;
+        if (dist[v] == 9999)
+            break;
+
+        used[v] = true;
 
         for (auto edge : g[v]) {
-
             int to = edge.first;
             int w = edge.second;
-
+            
             if (dist[to] > dist[v] + w) {
-
                 dist[to] = dist[v] + w;
-
-                q.push({ dist[to], to });
             }
         }
     }
@@ -64,13 +58,10 @@ int main() {
     bool ok = false;
 
     for (int i = 0; i < n; i++) {
-
         vector<long long> dist = solve(i, g);
-
         int newRoads = 0;
 
         for (int j = 0; j < n; j++) {
-
             if (j != i && dist[j] >= 100)
                 newRoads++;
         }
