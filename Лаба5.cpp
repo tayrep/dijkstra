@@ -25,9 +25,9 @@ vector<long long> solve(int start,
 
         used[v] = true;
 
-        for (auto edge : g[v]) {
-            int to = edge.first;
-            int w = edge.second;
+        for (auto e : g[v]) {
+            int to = e.first;
+            int w = e.second;
             
             if (dist[to] > dist[v] + w) {
                 dist[to] = dist[v] + w;
